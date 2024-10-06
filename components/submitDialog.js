@@ -66,28 +66,36 @@ export default function ExpenseDialog(props) {
       <DialogContent sx={{ padding: "1em 0 0" }}>
         { isGuessedCorrectly() ?
           <Stack>
-            <Typography variant="h5" className={styles.title}>
-              Congratulations! You got the correct answer: {props.answer}
+            <Typography variant="h6" sx={{ lineHeight: 2, paddingRight: "0.5em" }} 
+                        color="success.main" >
+              { props.answer }
             </Typography>
             <Divider light sx={{ paddingBottom: "0.5em" }} />
           </Stack>
           :
           <Stack sx={{ display: "flex", justifyContent: "space-between", flexDirection: "row" }}>
               <TextField color="tertiary" variant="filled" label="Enter guess"
-                          onKeyPress={handleKeyPress}
-                          value={guess.toUpperCase()}
-                          onChange={(event) => setGuess(event.target.value.toUpperCase())} />
+                         onKeyPress={handleKeyPress}
+                         value={guess.toUpperCase()}
+                         autoFocus={true}
+                         onChange={(event) => setGuess(event.target.value.toUpperCase())} />
             { showSubmitButton() }
           </Stack>
         }
         <Typography variant="h5" className={styles.title} sx={{ paddingTop: "0.5em" }}>
           Past Guesses
         </Typography>
+        { !isGuessedCorrectly() &&
+          <Typography variant="h6" sx={{ lineHeight: 2, paddingRight: "0.5em" }} 
+                      color="error" >
+            { submissions[submissions.length - 1] }
+          </Typography>
+        }
         { submissions.map((_, index, arr) => (
           <div key={index}>
             <Typography variant="h6" sx={{ lineHeight: 2, paddingRight: "0.5em" }} 
-                        color={(isGuessedCorrectly() && index === 0) ? "success.main" : "error"} >
-              { arr[arr.length - 1 - index] }
+                        color="error" >
+              { arr[arr.length - 2 - index] }
             </Typography>
           </div>)
         )}

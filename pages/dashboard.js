@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { CircularProgress, Container, Divider, Stack, Typography } from '@mui/material';
+import { Alert, CircularProgress, Container, Divider, Snackbar, Stack, Typography } from '@mui/material';
 import NavBar from '../components/navbar';
 import PuzzleRow from '../components/puzzleRow';
 import HintDialog from '../components/hintDialog';
@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [specificPuzzle, setSpecificPuzzle] = useState(-1);
   const [isShowHint, setIsShowHint] = useState(false);
   const [isShowSubmit, setIsShowSubmit] = useState(false);
+  const [isShowSuccessSnackbar, setIsShowSuccessSnackbar] = useState(false);
 
   // All puzzle information
   const [puzzles, setPuzzles] = useState([]);
@@ -59,13 +60,14 @@ export default function Dashboard() {
   const onSubmitSubmission = (updated) => {
     updateTeam(authUser.uid, specificPuzzle, updated, submissions, "submissions")
 
-      // Check whether the score needs to be updated
+    // Check whether the score needs to be updated
     if (updated[updated.length - 1] == puzzles[specificPuzzle]["answer"]) {
       const pointsForPuzzle = puzzles[specificPuzzle]["points"]
       const newScore = totalScore + pointsForPuzzle;
       setTotalScore(newScore);
       updateTeam(authUser.uid, specificPuzzle, pointsForPuzzle, scores, "scores")
       updateScore(authUser.uid, newScore);
+      setIsShowSuccessSnackbar(true);
     }
   }
 
@@ -119,6 +121,12 @@ export default function Dashboard() {
                   updateSubmissions={(updated) => onSubmitSubmission(updated)}
                   onCloseDialog={() => resetDialogs()}>
       </SubmitDialog>)}
+      <Snackbar open={isShowSuccessSnackbar} autoHideDuration={1500} onClose={() => setIsShowSuccessSnackbar(false)}
+              anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
+        <Alert onClose={() => setIsShowSuccessSnackbar(false)} severity="success">
+          Congratulations, you got the right answer!
+        </Alert>
+      </Snackbar>
     </div>
   )
 }
