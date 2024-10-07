@@ -35,7 +35,9 @@ export default function Home() {
   // Redirect if finished loading and there's an existing user (user is logged in)
   useEffect(() => {
     if (!isLoading && authUser) {
-      router.push(REDIRECT_PAGE);
+      router.push({
+        pathname: REDIRECT_PAGE
+    }, REDIRECT_PAGE)
     }
   }, [authUser, isLoading])
 

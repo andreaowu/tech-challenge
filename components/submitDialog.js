@@ -31,7 +31,6 @@ export default function ExpenseDialog(props) {
   }
 
   const handleKeyPress = (event) => {
-    console.log(event.keyCode);
     if (event.keyCode === 13 || event.which === 13) {
       // Make "Enter" submit the form
       event.preventDefault(); // prevent enter from refreshing the page

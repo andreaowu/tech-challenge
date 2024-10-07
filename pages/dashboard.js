@@ -5,14 +5,15 @@ import { Alert, CircularProgress, Container, Divider, Snackbar, Stack, Typograph
 import NavBar from '../components/navbar';
 import PuzzleRow from '../components/puzzleRow';
 import HintDialog from '../components/hintDialog';
+import TeamDialog from '../components/teamDialog';
 import SubmitDialog from '../components/submitDialog';
 import { useAuth } from '../firebase/auth';
-import { getPuzzles, getTeams, updateScore, updateTeam } from '../firebase/firestore';
+import { getPuzzles, getTeams, updateScore, updateTeam, updateTeamInfo } from '../firebase/firestore';
 
 export default function Dashboard() {
   const { authUser, isLoading } = useAuth();
   const router = useRouter();
-  
+
   // State involved in loading
   const [isLoadingPuzzles, setIsLoadingPuzzles] = useState(true);
   const [isLoadingTeams, setIsLoadingTeams] = useState(true);
@@ -20,6 +21,8 @@ export default function Dashboard() {
   const [isShowHint, setIsShowHint] = useState(false);
   const [isShowSubmit, setIsShowSubmit] = useState(false);
   const [isShowSuccessSnackbar, setIsShowSuccessSnackbar] = useState(false);
+  const [isShowTeamCreatedSnackbar, setIsShowTeamCreatedSnackbar] = useState(false);
+  const [isEditTeam, setIsEditTeam] = useState(false);
 
   // All puzzle information
   const [puzzles, setPuzzles] = useState([]);
@@ -29,6 +32,7 @@ export default function Dashboard() {
   const [submissions, setSubmissions] = useState([]);
   const [scores, setScores] = useState([]);
   const [totalScore, setTotalScore] = useState(0);
+  const [teamInfo, setTeamInfo] = useState({}); // { teamName: string, members: [] }
 
   // Listen for changes to loading and authUser, redirect if needed
   useEffect(() => {
@@ -37,13 +41,20 @@ export default function Dashboard() {
     }
   }, [authUser, isLoading])
 
-  // Get puzzles and teams info once user is logged in
+  useEffect(() => {
+    setIsEditTeam(!teamInfo.teamName);
+ }, [teamInfo])
+
+  // Get puzzles once user is logged in
   useEffect(async () => {
     if (authUser) {
-      const unsubscribe = await getPuzzles(setPuzzles, setIsLoadingPuzzles);
-      await getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, authUser.uid);
+      const teamsUnsubscribe = await getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, setTeamInfo, authUser.uid);
+      const puzzlesUnsubscribe = await getPuzzles(setPuzzles, setIsLoadingPuzzles);
 
-      return () => unsubscribe();
+      return () => {
+        teamsUnsubscribe();
+        puzzlesUnsubscribe();
+      };
     }
   }, [authUser])
 
@@ -77,6 +88,12 @@ export default function Dashboard() {
     setSpecificPuzzle(-1);
   }
 
+  const onUpdateTeamInfo = (teamInfo) => {
+    setTeamInfo(teamInfo);
+    setIsShowTeamCreatedSnackbar(true);
+    updateTeamInfo(authUser.uid, teamInfo);
+  }
+
   return ((!authUser || isLoadingPuzzles || isLoadingTeams) ?
     <CircularProgress color="inherit" sx={{ marginLeft: '50%', marginTop: '25%' }}/>
     :
@@ -84,7 +101,7 @@ export default function Dashboard() {
       <Head>
         <title>Tech Challenge 2024</title>
       </Head>
-      <NavBar />
+      <NavBar teamName={teamInfo.teamName} />
       <Container>
         <Stack direction="row" sx={{ paddingTop: "1.5em", display: "flex", justifyContent: "space-between" }}>
           <Stack sx={{ display: "flex", flexDirection: "row" }}>
@@ -107,14 +124,19 @@ export default function Dashboard() {
           </div>)
         )}
       </Container>
-      {specificPuzzle >= 0 && 
+      <TeamDialog showDialog={isEditTeam}
+                  teamInfo={teamInfo}
+                  updateTeamInfo={teamInfo => onUpdateTeamInfo(teamInfo)}
+                  onCloseDialog={() => setIsEditTeam(false)} >
+      </TeamDialog>
+      {specificPuzzle >= 0 &&
       (<HintDialog showDialog={isShowHint}
                   hints={puzzles[specificPuzzle]["hints"]}
                   numberOfHints={hints[specificPuzzle]}
                   updateCount={(numOfHints) => updateTeam(authUser.uid, specificPuzzle, numOfHints, hints, "hints")}
                   onCloseDialog={() => resetDialogs()}>
       </HintDialog>)}
-      {specificPuzzle >= 0 && 
+      {specificPuzzle >= 0 &&
       (<SubmitDialog showDialog={isShowSubmit}
                   answer={puzzles[specificPuzzle]["answer"]}
                   submissions={submissions[specificPuzzle]}
@@ -125,6 +147,12 @@ export default function Dashboard() {
               anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
         <Alert onClose={() => setIsShowSuccessSnackbar(false)} severity="success">
           Congratulations, you got the right answer!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={isShowTeamCreatedSnackbar} autoHideDuration={1500} onClose={() => setIsShowTeamCreatedSnackbar(false)}
+              anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
+        <Alert onClose={() => setShowTeamCreatedSnackbar(false)} severity="success">
+          Team created, good luck!
         </Alert>
       </Snackbar>
     </div>

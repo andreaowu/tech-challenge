@@ -40,7 +40,7 @@ export async function getPuzzles(setPuzzles, setIsLoading) {
   return unsubscribe;
 }
 
-export async function getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, id) {
+export async function getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, setTeamInfo, id) {
   const docRef = doc(db, TEAMS_COLLECTION, id);
   const docSnap = await getDoc(docRef);
   const data = docSnap.data();
@@ -49,8 +49,26 @@ export async function getTeams(setHints, setSubmissions, setScores, setTotalScor
   setSubmissions(data.submissions);
   setScores(data.scores);
   setTotalScore(data.totalScore);
-
+  if (data.teamName) {
+    setTeamInfo({
+      teamName: data.teamName,
+      members: data.members
+    });
+  } else {
+    setTeamInfo({
+      teamName: "",
+      members: []
+    })
+  }
   setIsLoadingTeams(false);
+}
+
+// Update team info with @id
+export function updateTeamInfo(id, teamInfo) {
+  setDoc(doc(db, TEAMS_COLLECTION, id), 
+    { teamName: teamInfo.teamName, members: teamInfo.members },
+    { merge: true }
+  );
 }
 
 // Update hints, submissions, or scores for team @id for puzzle @puzzleNumber

@@ -2,7 +2,7 @@ import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui
 import { useAuth } from '../firebase/auth';
 import styles from '../styles/navbar.module.scss';
 
-export default function NavBar() {
+export default function NavBar(props) {
   const { authUser, signOut } = useAuth();
 
   return (
@@ -15,7 +15,7 @@ export default function NavBar() {
             </Typography>
             <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
               <Typography variant="h7" sx={{ flexGrow: 1 }}>
-                {authUser?.email}
+                Team: {props.teamName}
               </Typography>
               <Button variant="text" color="secondary" onClick={signOut}>
                 Logout
