@@ -64,6 +64,7 @@ export default function ExpenseDialog(props) {
           :
           <Stack sx={{ display: "flex", justifyContent: "space-between", flexDirection: "row" }}>
               <TextField color="tertiary" variant="filled" label="Enter guess"
+                         sx={{ width: "70%" }}
                          onKeyPress={handleKeyPress}
                          value={guess.toUpperCase()}
                          autoFocus={true}

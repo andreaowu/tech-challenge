@@ -61,7 +61,10 @@ export default function TeamDialog(props) {
       <Typography variant="h4" className={styles.title}>
         Team Information
       </Typography>
-      <DialogContent className={styles.fields}>
+      <Typography variant="h7" className={styles.title} sx={{ paddingBottom: "0.5em" }}>
+        Please make sure this gets filled out correctly - you will not be able to make changes.
+      </Typography>
+      <DialogContent className={styles.fields} sx={{ padding: "0" }}>
         <TextField color="tertiary" label="Team Name" variant="standard" 
                    value={formFields.teamName}
                    onKeyPress={handleKeyPress}

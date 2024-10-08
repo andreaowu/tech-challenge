@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Button, Dialog, DialogContent, Typography } from '@mui/material';
+import { Button, Dialog, DialogContent, IconButton, Stack, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/infoDialog.module.scss';
 
 /* 
@@ -24,12 +25,25 @@ export default function HintDialog(props) {
 
   return (
     <Dialog classes={{paper: styles.dialog}}
-      onClose={() => props.onCloseDialog(numberOfHints)}
+      onClose={() => props.onCloseDialog()}
       open={props.showDialog}>
       <DialogContent className={styles.fields}>
-        <Typography variant="h4">
-          HINTS
-        </Typography>
+        <Stack>
+          <Typography variant="h4">
+            HINTS
+          </Typography>
+          <IconButton
+            onClick={() => props.onCloseDialog()}
+            sx={(theme) => ({
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Stack>
         { numberOfHints === 0 && 
           <Typography variant="h6" sx={{ lineHeight: 2, paddingRight: "0.5em" }}>
             No hints yet!

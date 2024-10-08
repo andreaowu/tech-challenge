@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Alert, CircularProgress, Container, Divider, Snackbar, Stack, Typography } from '@mui/material';
+import { Alert, CircularProgress, Container, Divider, Link, Snackbar, Stack, Typography } from '@mui/material';
 import NavBar from '../components/navbar';
 import PuzzleRow from '../components/puzzleRow';
 import HintDialog from '../components/hintDialog';
@@ -120,11 +120,19 @@ export default function Dashboard() {
               <Typography variant="h3" sx={{ lineHeight: 2, paddingRight: "0.5em"}}>
                 PUZZLES
               </Typography>
-              <Typography variant="h5" sx={{ alignSelf: "center"}}> Total Score: { totalScore } </Typography>
+              <Typography variant="h6" sx={{ alignSelf: "center"}}> Total Score: { totalScore } </Typography>
             </Stack>
-            <Typography variant="h5" sx={{ lineHeight: 2, paddingRight: "0.5em" }}>
-              Score
-            </Typography>
+            <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+              <Typography variant="h6">
+                <Link color="secondary" href="https://puzzledpint.com/wp-content/uploads/2022/12/Code_Sheet.pdf"
+                      target="_blank" sx={{ paddingRight: "0.5em" }}>
+                  Code Sheet
+                </Link>
+              </Typography>
+              <Typography variant="h6" sx={{ lineHeight: 2, paddingRight: "0.5em" }}>
+                | Points
+              </Typography>
+            </Stack>
           </Stack>
           { puzzles.map((puzzle, index) => (
             <div key={index}>
