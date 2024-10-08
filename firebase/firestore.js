@@ -1,19 +1,18 @@
-import { collection, doc, documentId, getDoc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore'; 
+import { collection, doc, documentId, getDoc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 
 const PUZZLES_COLLECTION = 'puzzle';
 const TEAMS_COLLECTION = 'teams';
-const NUM_PUZZLES = 8;
-
+const TOTAL_NUMBER_PUZZLES = 20;
 /* 
  Adds all team information when a user creates an account
 */
 export function addInit(id) {
   const hintsAndScores = {}
-  { Array.from({length: NUM_PUZZLES}, (_, index) => hintsAndScores[index] = 0 )}
+  { Array.from({length: TOTAL_NUMBER_PUZZLES}, (_, index) => hintsAndScores[index] = 0 )}
 
   const submissions = {}
-  { Array.from({length: NUM_PUZZLES}, (_, index) => submissions[index] = [] )} 
+  { Array.from({length: TOTAL_NUMBER_PUZZLES}, (_, index) => submissions[index] = [] )} 
 
   setDoc(doc(db, TEAMS_COLLECTION, id), 
     {
@@ -24,7 +23,8 @@ export function addInit(id) {
     });
 }
 
-export async function getPuzzles(setPuzzles, setIsLoading) {
+// Gets static puzzle information
+export async function getPuzzles(setPuzzles, setIsLoading, puzzleCount) {
   const puzzlesQuery = query(collection(db, PUZZLES_COLLECTION), orderBy(documentId()));
 
   const unsubscribe = onSnapshot(puzzlesQuery, async (snapshot) => {
@@ -33,13 +33,14 @@ export async function getPuzzles(setPuzzles, setIsLoading) {
       const puzzle = documentSnapshot.data();
       allInfo.push(puzzle);
     }
-    setPuzzles(allInfo);
+    setPuzzles(allInfo.slice(0, puzzleCount));
     setIsLoading(false);
   })
 
   return unsubscribe;
 }
 
+// Gets puzzle information for specific team with @id
 export async function getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, setTeamInfo, id) {
   const docRef = doc(db, TEAMS_COLLECTION, id);
   const docSnap = await getDoc(docRef);

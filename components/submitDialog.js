@@ -2,16 +2,6 @@ import { useState } from 'react';
 import { Button, Dialog, DialogContent, Divider, Stack, TextField, Typography } from '@mui/material';
 import styles from '../styles/infoDialog.module.scss';
 
-/* 
- Dialog to input receipt information
- 
- props:
-  - edit is the receipt to edit
-  - showDialog boolean for whether to show this dialog
-  - onError emits to notify error occurred
-  - onSuccess emits to notify successfully saving receipt
-  - onCloseDialog emits to close dialog
- */
 export default function ExpenseDialog(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissions, setSubmissions] = useState(props.submissions);

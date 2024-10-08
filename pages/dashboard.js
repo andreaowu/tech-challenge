@@ -8,6 +8,7 @@ import HintDialog from '../components/hintDialog';
 import TeamDialog from '../components/teamDialog';
 import SubmitDialog from '../components/submitDialog';
 import { useAuth } from '../firebase/auth';
+import { puzzleCount as initPuzzleCount } from '../firebase/remoteConfig';
 import { getPuzzles, getTeams, updateScore, updateTeam, updateTeamInfo } from '../firebase/firestore';
 
 export default function Dashboard() {
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const [isShowSuccessSnackbar, setIsShowSuccessSnackbar] = useState(false);
   const [isShowTeamCreatedSnackbar, setIsShowTeamCreatedSnackbar] = useState(false);
   const [isEditTeam, setIsEditTeam] = useState(false);
+  const [puzzleCount, setPuzzleCount] = useState(initPuzzleCount);
 
   // All puzzle information
   const [puzzles, setPuzzles] = useState([]);
@@ -43,18 +45,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     setIsEditTeam(!teamInfo.teamName);
- }, [teamInfo])
+  }, [teamInfo])
+
+  useEffect(async () => {
+    setPuzzleCount(initPuzzleCount);
+    await getPuzzles(setPuzzles, setIsLoadingPuzzles, initPuzzleCount);
+
+    return () => { unsubscribe() }
+  }, [initPuzzleCount])
 
   // Get puzzles once user is logged in
   useEffect(async () => {
     if (authUser) {
-      const teamsUnsubscribe = await getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, setTeamInfo, authUser.uid);
-      const puzzlesUnsubscribe = await getPuzzles(setPuzzles, setIsLoadingPuzzles);
+      const unsubscribe = await getTeams(setHints, setSubmissions, setScores, setTotalScore, setIsLoadingTeams, setTeamInfo, authUser.uid);
 
-      return () => {
-        teamsUnsubscribe();
-        puzzlesUnsubscribe();
-      };
+      return () => { unsubscribe() }
     }
   }, [authUser])
 
@@ -102,28 +107,36 @@ export default function Dashboard() {
         <title>Tech Challenge 2024</title>
       </Head>
       <NavBar teamName={teamInfo.teamName} />
+      { !puzzleCount ?
       <Container>
-        <Stack direction="row" sx={{ paddingTop: "1.5em", display: "flex", justifyContent: "space-between" }}>
-          <Stack sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography variant="h3" sx={{ lineHeight: 2, paddingRight: "0.5em"}}>
-              PUZZLES
+        <Typography variant="h3" sx={{ lineHeight: 2, paddingTop: "1em" }}>
+          Welcome! Puzzles will be released shortly.
+        </Typography>
+        </Container>
+        :
+        <Container>
+          <Stack direction="row" sx={{ paddingTop: "1.5em", display: "flex", justifyContent: "space-between" }}>
+            <Stack sx={{ display: "flex", flexDirection: "row" }}>
+              <Typography variant="h3" sx={{ lineHeight: 2, paddingRight: "0.5em"}}>
+                PUZZLES
+              </Typography>
+              <Typography variant="h5" sx={{ alignSelf: "center"}}> Total Score: { totalScore } </Typography>
+            </Stack>
+            <Typography variant="h5" sx={{ lineHeight: 2, paddingRight: "0.5em" }}>
+              Score
             </Typography>
-            <Typography variant="h5" sx={{ alignSelf: "center"}}> Total Score: { totalScore } </Typography>
           </Stack>
-          <Typography variant="h5" sx={{ lineHeight: 2, paddingRight: "0.5em" }}>
-            Score
-          </Typography>
-        </Stack>
-        { puzzles.map((puzzle, index) => (
-          <div key={index}>
-            <Divider light sx={{ marginBottom: "0.5em" }} />
-            <PuzzleRow puzzle={puzzle}
-                       score={scores[index]}
-                       onHint={() => onHint(index)}
-                       onSubmit={() => onSubmitHint(index)} />
-          </div>)
-        )}
-      </Container>
+          { puzzles.map((puzzle, index) => (
+            <div key={index}>
+              <Divider light sx={{ marginBottom: "0.5em" }} />
+              <PuzzleRow puzzle={puzzle}
+                        score={scores[index]}
+                        onHint={() => onHint(index)}
+                        onSubmit={() => onSubmitHint(index)} />
+            </div>)
+          )}
+        </Container>
+      }
       <TeamDialog showDialog={isEditTeam}
                   teamInfo={teamInfo}
                   updateTeamInfo={teamInfo => onUpdateTeamInfo(teamInfo)}
