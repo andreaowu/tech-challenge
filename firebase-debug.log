@@ -1,0 +1,40 @@
+[debug] [2024-10-09T04:17:23.324Z] ----------------------------------------------------------------------
+[debug] [2024-10-09T04:17:23.327Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2024-10-09T04:17:23.327Z] CLI Version:   13.10.2
+[debug] [2024-10-09T04:17:23.328Z] Platform:      darwin
+[debug] [2024-10-09T04:17:23.328Z] Node Version:  v18.2.0
+[debug] [2024-10-09T04:17:23.334Z] Time:          Wed Oct 09 2024 08:17:23 GMT+0400 (Gulf Standard Time)
+[debug] [2024-10-09T04:17:23.334Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-09T04:17:23.419Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-09T04:17:23.420Z] > authorizing via signed-in user (andreaowu@gmail.com)
+[debug] [2024-10-09T04:17:23.420Z] [iam] checking project fisk-puzzles for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-10-09T04:17:23.423Z] > refreshing access token with scopes: []
+[debug] [2024-10-09T04:17:23.425Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2024-10-09T04:17:23.425Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-09T04:17:23.881Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2024-10-09T04:17:23.881Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-09T04:17:23.931Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/fisk-puzzles:testIamPermissions [none]
+[debug] [2024-10-09T04:17:23.931Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/fisk-puzzles:testIamPermissions x-goog-quota-user=projects/fisk-puzzles
+[debug] [2024-10-09T04:17:23.931Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fisk-puzzles:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-10-09T04:17:25.582Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/fisk-puzzles:testIamPermissions 200
+[debug] [2024-10-09T04:17:25.583Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fisk-puzzles:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-10-09T04:17:25.584Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/fisk-puzzles [none]
+[debug] [2024-10-09T04:17:26.199Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/fisk-puzzles 200
+[debug] [2024-10-09T04:17:26.199Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/fisk-puzzles {"projectId":"fisk-puzzles","projectNumber":"997971413249","displayName":"fisk-puzzles","name":"projects/fisk-puzzles","resources":{"hostingSite":"fisk-puzzles"},"state":"ACTIVE","etag":"1_f9eb2536-c2da-402d-a5ea-6fcba8871731"}
+[debug] [2024-10-09T04:17:29.274Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/fisk-puzzles/sites pageToken=&pageSize=10
+[debug] [2024-10-09T04:17:31.024Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/fisk-puzzles/sites 200
+[debug] [2024-10-09T04:17:31.024Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/fisk-puzzles/sites {"sites":[{"name":"projects/fisk-puzzles/sites/fisk-puzzles","defaultUrl":"https://fisk-puzzles.web.app","appId":"1:997971413249:web:2dd9d32b2aa9c1e1dfb300","type":"DEFAULT_SITE"}]}
+[debug] [2024-10-09T04:17:31.025Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:997971413249:web:2dd9d32b2aa9c1e1dfb300/config [none]
+[debug] [2024-10-09T04:17:32.072Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:997971413249:web:2dd9d32b2aa9c1e1dfb300/config 200
+[debug] [2024-10-09T04:17:32.072Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:997971413249:web:2dd9d32b2aa9c1e1dfb300/config {"projectId":"fisk-puzzles","appId":"1:997971413249:web:2dd9d32b2aa9c1e1dfb300","storageBucket":"fisk-puzzles.appspot.com","apiKey":"AIzaSyCTa7T_oi5JefhrJIjbZNeN9WBMeGdFKxg","authDomain":"fisk-puzzles.firebaseapp.com","messagingSenderId":"997971413249"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+

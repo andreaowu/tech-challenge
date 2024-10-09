@@ -25,14 +25,27 @@ export function addInit(id) {
 
 // Gets static puzzle information
 export async function getPuzzles(setPuzzles, setIsLoading, puzzleCount) {
-  const puzzlesQuery = query(collection(db, PUZZLES_COLLECTION), orderBy(documentId()));
+  const puzzlesQuery = query(collection(db, PUZZLES_COLLECTION));
 
   const unsubscribe = onSnapshot(puzzlesQuery, async (snapshot) => {
     let allInfo = [];
-    for (const documentSnapshot of snapshot.docs) {
+
+    // Sort puzzles based on documentId, which is a string
+    // documentIds will never be equal so don't need to return 0
+    const sortedPuzzles = snapshot.docs.sort((a, b) => {
+      const idA = Number(a.id);
+      const idB = Number(b.id);
+      if (idA < idB) {
+        return -1;
+      }
+      return 1;
+    });
+
+    for (const documentSnapshot of sortedPuzzles) {
       const puzzle = documentSnapshot.data();
       allInfo.push(puzzle);
     }
+
     setPuzzles(allInfo.slice(0, puzzleCount));
     setIsLoading(false);
   })
