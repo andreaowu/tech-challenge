@@ -1,4 +1,4 @@
-import { collection, doc, documentId, getDoc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, query, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 
 const PUZZLES_COLLECTION = 'puzzle';

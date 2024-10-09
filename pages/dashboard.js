@@ -124,7 +124,7 @@ export default function Dashboard() {
             </Stack>
             <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               <Typography variant="h6">
-                <Link color="secondary" href="https://puzzledpint.com/wp-content/uploads/2022/12/Code_Sheet.pdf"
+                <Link color="secondary" href="https://drive.google.com/file/d/1Wz0VFdebx0w0yKgd8a1AiorbgfSVqMYc/view"
                       target="_blank" sx={{ paddingRight: "0.5em" }}>
                   Code Sheet
                 </Link>
