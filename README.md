@@ -5,4 +5,4 @@ This app was made for the [Google in Residence](https://buildyourfuture.withgoog
 You can view the app [here](https://techchallenge2024.com/). If that link is no longer working, view it [here](http://fisk-puzzles.web.app/).
 
 # Tech Stack
-Built with React and Firebase (Authentication, Firestore)
+Built with React and Firebase (Authentication, FirebaseUI for web, Firestore)
