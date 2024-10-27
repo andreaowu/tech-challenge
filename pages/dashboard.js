@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Alert, CircularProgress, Container, Divider, Link, Snackbar, Stack, Typography } from '@mui/material';
+import { Alert, IconButton, CircularProgress, Container, Divider, SvgIcon, Link, Snackbar, Stack, Typography } from '@mui/material';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import NavBar from '../components/navbar';
 import PuzzleRow from '../components/puzzleRow';
+import ScoreHintDialog from '../components/scoreHintDialog';
 import HintDialog from '../components/hintDialog';
 import TeamDialog from '../components/teamDialog';
 import SubmitDialog from '../components/submitDialog';
@@ -28,6 +30,7 @@ export default function Dashboard() {
   const [isShowSubmit, setIsShowSubmit] = useState(false);
   const [isShowSuccessSnackbar, setIsShowSuccessSnackbar] = useState(false);
   const [isShowTeamCreatedSnackbar, setIsShowTeamCreatedSnackbar] = useState(false);
+  const [isShowScoreHint, setIsShowScoreHint] = useState(false);
   const [isEditTeam, setIsEditTeam] = useState(false);
   const [puzzleCount, setPuzzleCount] = useState(initPuzzleCount);
   const [hintCount, setHintCount] = useState(0);
@@ -131,7 +134,7 @@ export default function Dashboard() {
               <Typography variant="h3" sx={{ lineHeight: 2, paddingRight: "0.5em"}}>
                 PUZZLES
               </Typography>
-              <Typography variant="h6" sx={{ alignSelf: "center"}}> Total Score: { totalScore } </Typography>
+              <Typography variant="h6" sx={{ alignSelf: "center"}}> Total Score: {totalScore} </Typography>
             </Stack>
             <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               <Typography variant="h6">
@@ -143,6 +146,10 @@ export default function Dashboard() {
               <Typography variant="h6" sx={{ lineHeight: 2, paddingRight: "0.5em" }}>
                 | Points
               </Typography>
+              <IconButton sx={{ alignSelf: "start", width: "1em", height: "1em", margin: "0.5em 0 0 -0.5em"}}
+                          onClick={() => setIsShowScoreHint(true)}>
+                <HelpOutlineOutlinedIcon sx={{ fontSize: "16px" }}/>
+              </IconButton>
             </Stack>
           </Stack>
           { puzzles.map((puzzle, index) => (
@@ -161,6 +168,9 @@ export default function Dashboard() {
                   updateTeamInfo={teamInfo => onUpdateTeamInfo(teamInfo)}
                   onCloseDialog={() => setIsEditTeam(false)} >
       </TeamDialog>
+      <ScoreHintDialog showDialog={isShowScoreHint}
+                       onCloseDialog={() => setIsShowScoreHint(false)} >
+      </ScoreHintDialog>
       {specificPuzzle >= 0 &&
       (<HintDialog showDialog={isShowHint}
                   hints={puzzles[specificPuzzle]["hints"]}
