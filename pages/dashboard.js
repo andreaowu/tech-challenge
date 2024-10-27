@@ -11,6 +11,11 @@ import { useAuth } from '../firebase/auth';
 import { puzzleCount as initPuzzleCount } from '../firebase/remoteConfig';
 import { getPuzzles, getTeams, updateScore, updateTeam, updateTeamInfo } from '../firebase/firestore';
 
+// Points each hint is worth
+const FIRST_HINT = 5;
+const SECOND_HINT = 15;
+const THIRD_HINT = 35;
+
 export default function Dashboard() {
   const { authUser, isLoading } = useAuth();
   const router = useRouter();
@@ -25,6 +30,7 @@ export default function Dashboard() {
   const [isShowTeamCreatedSnackbar, setIsShowTeamCreatedSnackbar] = useState(false);
   const [isEditTeam, setIsEditTeam] = useState(false);
   const [puzzleCount, setPuzzleCount] = useState(initPuzzleCount);
+  const [hintCount, setHintCount] = useState(0);
 
   // All puzzle information
   const [puzzles, setPuzzles] = useState([]);
@@ -68,6 +74,11 @@ export default function Dashboard() {
     setIsShowHint(true);
   }
 
+  const onUpdateHintCount = (numOfHints) => {
+    setHintCount(numOfHints);
+    updateTeam(authUser.uid, specificPuzzle, numOfHints, hints, "hints");
+  }
+
   const onSubmitHint = (index) => {
     setSpecificPuzzle(index);
     setIsShowSubmit(true);
@@ -78,7 +89,7 @@ export default function Dashboard() {
 
     // Check whether the score needs to be updated
     if (updated[updated.length - 1] == puzzles[specificPuzzle]["answer"]) {
-      const pointsForPuzzle = puzzles[specificPuzzle]["points"]
+      const pointsForPuzzle = puzzles[specificPuzzle]["points"] - (hintCount == 1 ? (FIRST_HINT) : (hintCount == 2 ? SECOND_HINT : THIRD_HINT));
       const newScore = totalScore + pointsForPuzzle;
       setTotalScore(newScore);
       updateTeam(authUser.uid, specificPuzzle, pointsForPuzzle, scores, "scores")
@@ -154,7 +165,7 @@ export default function Dashboard() {
       (<HintDialog showDialog={isShowHint}
                   hints={puzzles[specificPuzzle]["hints"]}
                   numberOfHints={hints[specificPuzzle]}
-                  updateCount={(numOfHints) => updateTeam(authUser.uid, specificPuzzle, numOfHints, hints, "hints")}
+                  updateCount={(numOfHints) => onUpdateHintCount(numOfHints)}
                   onCloseDialog={() => resetDialogs()}>
       </HintDialog>)}
       {specificPuzzle >= 0 &&
