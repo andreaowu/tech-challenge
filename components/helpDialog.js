@@ -15,7 +15,6 @@ export default function HelpDialog(props) {
             <Typography sx={{ paddingTop: "1em" }}>
                 Today, you'll be solving puzzles in teams! They're logic-based puzzles, and if
                 you've ever done an Escape Room, these are similar but on "paper".
-                Make sure you pay attention to the instructions, because there are usually clues for what you're supposed to do.
             </Typography>
             <Typography variant="h4" sx={{ paddingTop: "0.5em" }}>
                 Tips
