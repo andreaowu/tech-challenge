@@ -1,9 +1,18 @@
+import { useState } from 'react';
 import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material';
 import { useAuth } from '../firebase/auth';
+import HelpDialog from '../components/helpDialog';
 import styles from '../styles/navbar.module.scss';
 
 export default function NavBar(props) {
-  const { authUser, signOut } = useAuth();
+  const { signOut } = useAuth();
+
+  const [isShowHelp, setIsShowHelp] = useState(false);
+
+  const closeHelp = () => {
+    setIsShowHelp(false);
+    props.onCloseInfo();
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -17,6 +26,9 @@ export default function NavBar(props) {
               <Typography variant="h7" sx={{ flexGrow: 1 }}>
                 Team: {props.teamName}
               </Typography>
+              <Button variant="text" color="secondary" onClick={() => setIsShowHelp(true)}>
+                Info
+              </Button>
               <Button variant="text" color="secondary" onClick={signOut}>
                 Logout
               </Button>
@@ -24,6 +36,9 @@ export default function NavBar(props) {
           </Container>
         </Toolbar>
       </AppBar>
+      <HelpDialog showDialog={isShowHelp || props.isShowInfo}
+                  onCloseDialog={() => closeHelp()} >
+      </HelpDialog>
     </Box>
   );
 }

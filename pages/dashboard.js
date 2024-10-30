@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Alert, IconButton, CircularProgress, Container, Divider, SvgIcon, Link, Snackbar, Stack, Typography } from '@mui/material';
+import { Alert, IconButton, CircularProgress, Container, Divider, Link, Snackbar, Stack, Typography } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import NavBar from '../components/navbar';
 import PuzzleRow from '../components/puzzleRow';
@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [isEditTeam, setIsEditTeam] = useState(false);
   const [puzzleCount, setPuzzleCount] = useState(initPuzzleCount);
   const [hintCount, setHintCount] = useState(0);
+  const [isShowInfo, setIsShowInfo] = useState(false);
 
   // All puzzle information
   const [puzzles, setPuzzles] = useState([]);
@@ -71,6 +72,11 @@ export default function Dashboard() {
       return () => { unsubscribe() }
     }
   }, [authUser])
+
+  const updateTeam = () => {
+    setIsEditTeam(false);
+    setIsShowInfo(true);
+  }
 
   const onOpenHintOrDialog = (index) => {
     setSpecificPuzzle(index);
@@ -132,7 +138,9 @@ export default function Dashboard() {
       <Head>
         <title>Tech Challenge 2024</title>
       </Head>
-      <NavBar teamName={teamInfo.teamName} />
+      <NavBar teamName={teamInfo.teamName}
+              isShowInfo={isShowInfo}
+              onCloseInfo={() => setIsShowInfo(false)} />
       { !puzzleCount ?
       <Container>
         <Typography variant="h3" sx={{ lineHeight: 2, paddingTop: "1em" }}>
@@ -178,7 +186,7 @@ export default function Dashboard() {
       <TeamDialog showDialog={isEditTeam}
                   teamInfo={teamInfo}
                   updateTeamInfo={teamInfo => onUpdateTeamInfo(teamInfo)}
-                  onCloseDialog={() => setIsEditTeam(false)} >
+                  onCloseDialog={() => updateTeam()} >
       </TeamDialog>
       <ScoreHintDialog showDialog={isShowScoreHint}
                        onCloseDialog={() => setIsShowScoreHint(false)} >
