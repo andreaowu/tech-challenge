@@ -72,8 +72,13 @@ export default function Dashboard() {
     }
   }, [authUser])
 
-  const onHint = (index) => {
+  const onOpenHintOrDialog = (index) => {
     setSpecificPuzzle(index);
+    setHintCount(hints[index]);
+  }
+
+  const onHint = (index) => {
+    onOpenHintOrDialog(index);
     setIsShowHint(true);
   }
 
@@ -83,7 +88,7 @@ export default function Dashboard() {
   }
 
   const onSubmitHint = (index) => {
-    setSpecificPuzzle(index);
+    onOpenHintOrDialog(index);
     setIsShowSubmit(true);
   }
 
@@ -92,7 +97,13 @@ export default function Dashboard() {
 
     // Check whether the score needs to be updated
     if (updated[updated.length - 1] == puzzles[specificPuzzle]["answer"]) {
-      const pointsForPuzzle = puzzles[specificPuzzle]["points"] - (hintCount == 1 ? (FIRST_HINT) : (hintCount == 2 ? SECOND_HINT : THIRD_HINT));
+      // Number of points subtracted for hints
+      const hintPoints = 0;
+      if (hintCount > 0) {
+        hintPoints = hintCount == 1 ? (FIRST_HINT) : (hintCount == 2 ? SECOND_HINT : THIRD_HINT);
+      }
+
+      const pointsForPuzzle = puzzles[specificPuzzle]["points"] - hintPoints;
       const newScore = totalScore + pointsForPuzzle;
       setTotalScore(newScore);
       updateTeam(authUser.uid, specificPuzzle, pointsForPuzzle, scores, "scores")
@@ -105,6 +116,7 @@ export default function Dashboard() {
     setIsShowHint(false);
     setIsShowSubmit(false);
     setSpecificPuzzle(-1);
+    setHintCount(0);
   }
 
   const onUpdateTeamInfo = (teamInfo) => {
