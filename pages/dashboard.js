@@ -73,7 +73,7 @@ export default function Dashboard() {
     }
   }, [authUser])
 
-  const updateTeam = () => {
+  const onCloseUpdateTeam = () => {
     setIsEditTeam(false);
     setIsShowInfo(true);
   }
@@ -186,7 +186,7 @@ export default function Dashboard() {
       <TeamDialog showDialog={isEditTeam}
                   teamInfo={teamInfo}
                   updateTeamInfo={teamInfo => onUpdateTeamInfo(teamInfo)}
-                  onCloseDialog={() => updateTeam()} >
+                  onCloseDialog={() => onCloseUpdateTeam()} >
       </TeamDialog>
       <ScoreHintDialog showDialog={isShowScoreHint}
                        onCloseDialog={() => setIsShowScoreHint(false)} >
