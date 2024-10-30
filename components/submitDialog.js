@@ -28,6 +28,10 @@ export default function ExpenseDialog(props) {
     } else if (event.code === 'Space') {
       // Prevent spaces
       event.preventDefault();
+    } else {
+      // Remove spaces
+      const value = event.target.value;
+
     }
   }
 
@@ -66,9 +70,9 @@ export default function ExpenseDialog(props) {
               <TextField color="tertiary" variant="filled" label="Enter guess"
                          sx={{ width: "70%" }}
                          onKeyPress={handleKeyPress}
-                         value={guess.toUpperCase()}
+                         value={guess.toUpperCase().replace(/\s/g, '')}
                          autoFocus={true}
-                         onChange={(event) => setGuess(event.target.value.toUpperCase())} />
+                         onChange={(event) => setGuess(event.target.value.toUpperCase().replace(/\s/g, ''))} />
             { showSubmitButton() }
           </Stack>
         }
