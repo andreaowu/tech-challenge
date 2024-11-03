@@ -4,6 +4,8 @@ import { db } from './firebase';
 const PUZZLES_COLLECTION = 'puzzle';
 const TEAMS_COLLECTION = 'teams';
 const TOTAL_NUMBER_PUZZLES = 20;
+const CHECK_COLLECTION = 'check';
+
 /* 
  Adds all team information when a user creates an account
 */
@@ -25,6 +27,7 @@ export function addInit(id) {
 
 // Gets static puzzle information
 export async function getPuzzles(setPuzzles, setIsLoading, puzzleCount) {
+  let puzzles = {};
   const puzzlesQuery = query(collection(db, PUZZLES_COLLECTION));
 
   const unsubscribe = onSnapshot(puzzlesQuery, async (snapshot) => {
@@ -47,7 +50,33 @@ export async function getPuzzles(setPuzzles, setIsLoading, puzzleCount) {
     }
 
     setPuzzles(allInfo.slice(0, puzzleCount));
+    puzzles = allInfo;
     setIsLoading(false);
+  })
+
+  const teamsQuery = query(collection(db, TEAMS_COLLECTION));
+
+  onSnapshot(teamsQuery, async (snapshot) => {
+    for (const documentSnapshot of snapshot.docs) {
+      const team = documentSnapshot.data();
+      const id =  documentSnapshot.id;
+      const totalScore = team.totalScore;
+      const submissions = team.submissions;
+      let correctScore = 0;
+
+      for (const [index, submission] of Object.entries(submissions)) {
+        const lastSubmission = submission[submission.length - 1];
+        const puzzlePoints = puzzles[index]['points'];
+        const correctAnswer = puzzles[index]['answer'];
+        correctScore += (lastSubmission == correctAnswer) ? puzzlePoints : 0;
+      };
+
+      setDoc(doc(db, CHECK_COLLECTION, id), 
+      {
+        correctScore,
+        totalScore
+      });
+    }
   })
 
   return unsubscribe;

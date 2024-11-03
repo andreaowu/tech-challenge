@@ -123,6 +123,7 @@ export default function Dashboard() {
     setIsShowSubmit(false);
     setSpecificPuzzle(-1);
     setHintCount(0);
+    setTotalScore(0);
   }
 
   const onUpdateTeamInfo = (teamInfo) => {
